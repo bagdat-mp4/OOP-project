@@ -5,73 +5,63 @@ import src.models.employees.Teacher;
 
 import java.util.*;
 
-/**
- * 
- */
 public class Student extends User {
 
-    /**
-     * Default constructor
-     */
     public Student() {
+        super();
+        this.failCount = 0;
     }
 
-    /**
-     * 
-     */
     private int yearOfStudy;
-
-    /**
-     * 
-     */
     private String major;
-
-    /**
-     * 
-     */
     private int currentCredits;
-
-    /**
-     * 
-     */
     private int failCount;
-
-    /**
-     * 
-     */
     private Map<Course, Mark> transcript;
 
+    public int getYearOfStudy() {
+        return this.yearOfStudy;
+    }
 
-    /**
-     * 
-     */
-    public Course many;
+    public String getMajor() {
+        return this.major;
+    }
 
-    /**
-     * 
-     */
-    public Mark many;
+    public int getCurrentCredits() {
+        return this.currentCredits;
+    }
 
-    /**
-     * 
-     */
-    public StudentOrganization many;
+    public int getFailCount() {
+        return this.failCount;
+    }
 
+    public double getGpa() {
+        double totalMark = 0;
+        int count = 0;
+        for (Mark mark: transcript.values()) {
+            totalMark += mark.getTotal();
+            count++;
+        }
+        return totalMark / count;
+    }
 
-    /**
-     * @param teacher 
-     * @param rating 
-     * @return
-     */
+    public void setYearOfStudy(int yearOfStudy){
+        this.yearOfStudy = yearOfStudy;
+    }
+    public void setMajor(String major){
+        this.major = major;
+    }
+    public void addCredits(int credits) {
+        this.currentCredits += credits;
+    }
+    public void addFailCount() {
+        this.failCount++;
+    }
+
     public void rateTeacher(Teacher teacher, int rating) {
         // TODO implement here
         return null;
     }
 
-    /**
-     * @param course 
-     * @return
-     */
     public void registerForCourse(Course course) {
         // TODO implement here
         return null;

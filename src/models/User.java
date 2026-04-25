@@ -3,109 +3,101 @@ package src.models;
 import src.enums.Language;
 import src.interfaces.Subscriber;
 
-/**
- * 
- */
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+import java.util.Objects;
+
 public abstract class User implements Subscriber {
 
-    /**
-     * Default constructor
-     */
+    private static long idIncrement = 0;
+
     public User() {
+        this.id = ++idIncrement;
     }
-
-    /**
-     * 
-     */
     private long id;
-
-    /**
-     * 
-     */
+    private boolean isLoggedIn = false;
     private String login;
-
-    /**
-     * 
-     */
     private String password;
-
-    /**
-     * 
-     */
     private String firstName;
-
-    /**
-     * 
-     */
     private String lastName;
-
-    /**
-     * 
-     */
     private Language language;
-
-    /**
-     * 
-     */
     private String email;
+    public long getId() {
+        return this.id;
+    }
 
+    public String getLogin() {
+        return this.login;
+    }
+    public String getFirstName() {
+        return this.firstName;
+    }
+    public String getLastName() {
+        return this.lastName;
+    }
+    public Language getLanguage() {
+        return this.language;
+    }
+    public String getEmail() {
+        return this.email;
+    }
 
+    public void setLogin(String login) {
+        this.login = login;
+    }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
+    public void setPassword(String password) throws NoSuchAlgorithmException {
+        this.password = encodePassword(password);
+    }
 
-
-    /**
-     * @param o 
-     * @return
-     */
     public boolean equals(Object o) {
-        // TODO implement here
-        return false;
-    }
+        if(o == this)
+            return true;
 
-    /**
-     * @return
-     */
+        if(!(o instanceof User user))
+            return false;
+
+        return this.id == user.getId() && Objects.equals(user.getEmail(), this.email);
+    }
     public int hashCode() {
-        // TODO implement here
-        return 0;
+        return Objects.hash(id, email);
     }
 
-    /**
-     * @return
-     */
     public String toString() {
-        // TODO implement here
-        return "";
+        return String.format("User[ id: %d, email: %s, firstName: %s, lastName: %s ]", this.id, this.email, this.firstName, this.lastName);
     }
 
-    /**
-     * @param login 
-     * @param Password 
-     * @return
-     */
-    public boolean login(String login, String Password) {
-        // TODO implement here
+    public boolean login(String password) throws NoSuchAlgorithmException {
+        if(this.password.equals(encodePassword(password))) {
+            isLoggedIn = true;
+            return true;
+        }
         return false;
     }
 
-    /**
-     * @param journalName 
-     * @param paper 
-     * @return
-     */
-    public void update(String journalName, ResearchPaper paper) {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * @param journalName 
-     * @param paper 
-     * @return
-     */
     public void update(String journalName, ResearchPaper paper) {
         // TODO implement Subscriber.update() here
-        return null;
     }
+
+    private String encodePassword(String password) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+        return Base64.getEncoder().encodeToString(hash);
+    }
+
 
 }
