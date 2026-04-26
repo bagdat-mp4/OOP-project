@@ -43,6 +43,9 @@ public abstract class User implements Subscriber {
     public String getEmail() {
         return this.email;
     }
+    public boolean isLoggedIn() {
+        return this.isLoggedIn;
+    }
 
     public void setLogin(String login) {
         this.login = login;
@@ -59,10 +62,17 @@ public abstract class User implements Subscriber {
     public void setEmail(String email) {
         this.email = email;
     }
+    protected String getPassword() {
+        return this.password;
+    }
 
     public void setPassword(String password) throws NoSuchAlgorithmException {
         this.password = encodePassword(password);
     }
+    public void setLoggedIn(boolean isLogged) {
+        this.isLoggedIn = isLogged;
+    }
+
 
     public boolean equals(Object o) {
         if(o == this)
@@ -93,7 +103,7 @@ public abstract class User implements Subscriber {
         // TODO implement Subscriber.update() here
     }
 
-    private String encodePassword(String password) throws NoSuchAlgorithmException {
+    protected String encodePassword(String password) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
         return Base64.getEncoder().encodeToString(hash);

@@ -3,6 +3,7 @@ package src.models.students;
 import src.models.User;
 import src.models.employees.Teacher;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class Student extends User {
@@ -16,7 +17,8 @@ public class Student extends User {
     private String major;
     private int currentCredits;
     private int failCount;
-    private Map<Course, Mark> transcript;
+    private Map<Course, Mark> transcript = new HashMap<>();
+    private boolean isBlocked = false;
 
     public int getYearOfStudy() {
         return this.yearOfStudy;
@@ -35,13 +37,17 @@ public class Student extends User {
     }
 
     public double getGpa() {
+        if(transcript.isEmpty())
+            return 0.0;
+
         double totalMark = 0;
-        int count = 0;
         for (Mark mark: transcript.values()) {
             totalMark += mark.getTotal();
-            count++;
         }
-        return totalMark / count;
+        return totalMark / transcript.size();
+    }
+    public boolean isBlocked() {
+        return this.isBlocked;
     }
 
     public void setYearOfStudy(int yearOfStudy){
@@ -55,16 +61,30 @@ public class Student extends User {
     }
     public void addFailCount() {
         this.failCount++;
+        if(this.failCount >= 3) {
+            this.setBlocked();
+        }
+    }
+    public void setBlocked() {
+        this.isBlocked = true;
     }
 
     public void rateTeacher(Teacher teacher, int rating) {
         // TODO implement here
-        return null;
     }
 
     public void registerForCourse(Course course) {
         // TODO implement here
-        return null;
+    }
+
+    @Override
+    public boolean login(String password) throws NoSuchAlgorithmException {
+        if (this.isBlocked) {
+            System.out.println("Access denied: Your account is blocked.");
+            return false;
+        }
+
+        return super.login(password);
     }
 
 }
