@@ -1,14 +1,12 @@
 package src.comparators;
 
-/**
- * 
- */
-public class PaperLengthComporator {
+import src.models.ResearchPaper;
+import java.util.Comparator;
 
-    /**
-     * Default constructor
-     */
-    public PaperLengthComporator() {
+public class PaperLengthComporator implements Comparator<ResearchPaper> {
+
+    @Override
+    public int compare(ResearchPaper p1, ResearchPaper p2) {
+        return Integer.compare(p2.getPages(), p1.getPages());
     }
-
 }

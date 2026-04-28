@@ -2,14 +2,16 @@ package src.models;
 
 import src.enums.Language;
 import src.interfaces.Subscriber;
+import src.models.ResearchPaper;
 
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Objects;
 
-public abstract class User implements Subscriber {
+public abstract class User implements Subscriber, Serializable {
 
     private static long idIncrement = 0;
 
@@ -24,83 +26,56 @@ public abstract class User implements Subscriber {
     private String lastName;
     private Language language;
     private String email;
-    public long getId() {
-        return this.id;
-    }
 
-    public String getLogin() {
-        return this.login;
-    }
-    public String getFirstName() {
-        return this.firstName;
-    }
-    public String getLastName() {
-        return this.lastName;
-    }
-    public Language getLanguage() {
-        return this.language;
-    }
-    public String getEmail() {
-        return this.email;
-    }
-    public boolean isLoggedIn() {
-        return this.isLoggedIn;
-    }
+    public long getId() { return this.id; }
+    public String getLogin() { return this.login; }
+    public String getFirstName() { return this.firstName; }
+    public String getLastName() { return this.lastName; }
+    public Language getLanguage() { return this.language; }
+    public String getEmail() { return this.email; }
+    public boolean isLoggedIn() { return this.isLoggedIn; }
+    protected String getPassword() { return this.password; }
 
-    public void setLogin(String login) {
-        this.login = login;
-    }
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-    public void setLanguage(Language language) {
-        this.language = language;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    protected String getPassword() {
-        return this.password;
-    }
+    public void setLogin(String login) { this.login = login; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+    public void setLanguage(Language language) { this.language = language; }
+    public void setEmail(String email) { this.email = email; }
+    public void setLoggedIn(boolean isLogged) { this.isLoggedIn = isLogged; }
 
     public void setPassword(String password) throws NoSuchAlgorithmException {
         this.password = encodePassword(password);
     }
-    public void setLoggedIn(boolean isLogged) {
-        this.isLoggedIn = isLogged;
-    }
-
 
     public boolean equals(Object o) {
-        if(o == this)
-            return true;
-
-        if(!(o instanceof User user))
-            return false;
-
+        if (o == this) return true;
+        if (!(o instanceof User user)) return false;
         return this.id == user.getId() && Objects.equals(user.getEmail(), this.email);
     }
+
     public int hashCode() {
         return Objects.hash(id, email);
     }
 
     public String toString() {
-        return String.format("User[ id: %d, email: %s, firstName: %s, lastName: %s ]", this.id, this.email, this.firstName, this.lastName);
+        return String.format("User[ id: %d, email: %s, firstName: %s, lastName: %s ]",
+                this.id, this.email, this.firstName, this.lastName);
     }
 
     public boolean login(String password) throws NoSuchAlgorithmException {
-        if(this.password.equals(encodePassword(password))) {
+        if (this.password.equals(encodePassword(password))) {
             isLoggedIn = true;
             return true;
         }
         return false;
     }
 
+
+    @Override
     public void update(String journalName, ResearchPaper paper) {
-        // TODO implement Subscriber.update() here
+        System.out.println("Notification for " + firstName +
+                ": new paper in journal '" + journalName +
+                "': " + paper.getName());
     }
 
     protected String encodePassword(String password) throws NoSuchAlgorithmException {
@@ -108,6 +83,4 @@ public abstract class User implements Subscriber {
         byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
         return Base64.getEncoder().encodeToString(hash);
     }
-
-
 }

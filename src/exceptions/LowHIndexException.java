@@ -1,15 +1,7 @@
 package src.exceptions;
 
-/**
- * 
- */
-public class LowHIndexException {
-
-    /**
-     * Default constructor
-     */
-    public LowHIndexException() {
+public class LowHIndexException extends Exception {
+    public LowHIndexException(String message) {
+        super(message);
     }
-
-
 }

@@ -2,65 +2,57 @@ package src.models.employees;
 
 import src.models.User;
 
+import java.io.Serializable;
 import java.util.*;
 
-/**
- * 
- */
 public abstract class Employee extends User {
 
-    /**
-     * Default constructor
-     */
-    public Employee() {
-    }
-
-    /**
-     * 
-     */
     private double salary;
-
-    /**
-     * 
-     */
     private Date hireDate;
-
-    /**
-     * 
-     */
     private List<Message> inbox;
 
-    /**
-     * 
-     */
-    public TechSupportRequest many;
+    public Employee() {
+        super();
+        this.inbox = new ArrayList<>();
+        this.hireDate = new Date();
+    }
 
+    // getters
+    public double getSalary() { return salary; }
+    public Date getHireDate() { return hireDate; }
+    public List<Message> getInbox() { return inbox; }
 
-    /**
-     * @param receiver 
-     * @param message 
-     * @return
-     */
+    // setters
+    public void setSalary(double salary) { this.salary = salary; }
+    public void setHireDate(Date hireDate) { this.hireDate = hireDate; }
+
+    // send message to another employee
     public void sendMessage(Employee receiver, Message message) {
-        // TODO implement here
-        return null;
+        receiver.inbox.add(message);
+        System.out.println("Message sent: " + getFirstName() +
+                " -> " + receiver.getFirstName());
     }
 
-    /**
-     * @param request 
-     * @return
-     */
-    public void callSupport(TechSupportRequest request) {
-        // TODO implement here
-        return null;
-    }
 
-    /**
-     * @return
-     */
     public void getMessages() {
-        // TODO implement here
-        return null;
+        if (inbox.isEmpty()) {
+            System.out.println("No new messages.");
+            return;
+        }
+        System.out.println("===== Inbox: " + getFirstName() + " =====");
+        for (Message m : inbox) {
+            System.out.println(m);
+        }
     }
 
+    // send tech support request
+    public void callSupport(TechSupportRequest request) {
+        System.out.println("Support request sent: " + request);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Employee[ %s %s | Salary: %.1f ]",
+                getFirstName(), getLastName(), salary);
+    }
 }

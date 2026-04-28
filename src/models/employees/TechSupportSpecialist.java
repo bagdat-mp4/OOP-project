@@ -5,43 +5,40 @@ import src.enums.RequestStatus;
 
 import java.util.*;
 
-/**
- * 
- */
 public class TechSupportSpecialist extends Employee {
 
-    /**
-     * Default constructor
-     */
     public TechSupportSpecialist() {
+        super();
     }
 
-    /**
-     * 
-     */
-    public TechSupportRequest 1;
-
-    /**
-     * 
-     */
-    public DataStore 1;
-
-    /**
-     * @return
-     */
     public List<TechSupportRequest> viewRequests() {
-        // TODO implement here
-        return null;
+        List<TechSupportRequest> requests =
+                DataStore.getInstance().getTechSupportRequests();
+
+        if (requests.isEmpty()) {
+            System.out.println("No new requests.");
+            return requests;
+        }
+
+        System.out.println("===== Tech Support Requests =====");
+        for (TechSupportRequest request : requests) {
+            if (request.getStatus() == RequestStatus.NEW) {
+                request.setStatus(RequestStatus.VIEWED);
+            }
+            System.out.println(request);
+        }
+        return requests;
     }
 
-    /**
-     * @param request 
-     * @param status 
-     * @return
-     */
     public void changeStatus(TechSupportRequest request, RequestStatus status) {
-        // TODO implement here
-        return null;
+        request.setStatus(status);
+        System.out.printf("Request updated: [%s] %s%n",
+                status, request.getIssue());
     }
 
+    @Override
+    public String toString() {
+        return String.format("TechSupportSpecialist[ %s %s ]",
+                getFirstName(), getLastName());
+    }
 }

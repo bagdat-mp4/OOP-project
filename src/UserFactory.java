@@ -2,29 +2,30 @@ package src;
 
 import src.enums.UserType;
 import src.models.User;
+import src.models.employees.*;
+import src.models.students.*;
 
-import java.io.*;
-import java.util.*;
-
-/**
- * 
- */
 public class UserFactory {
 
-    /**
-     * Default constructor
-     */
-    public UserFactory() {
-    }
+    public UserFactory() {}
 
-
-    /**
-     * @param type 
-     * @return
-     */
     public User createUser(UserType type) {
-        // TODO implement here
-        return null;
+        switch (type) {
+            case STUDENT:
+                return new Student();
+            case GRADUATE_STUDENT:
+                return new GraduateStudent();
+            case TEACHER:
+                return new Teacher();
+            case MANAGER:
+                return new Manager();
+            case ADMIN:
+                return new Admin();
+            case TECH_SUPPORT:
+                return new TechSupportSpecialist();
+            default:
+                System.out.println("Unknown user type: " + type);
+                return null;
+        }
     }
-
 }

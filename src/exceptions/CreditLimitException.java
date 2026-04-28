@@ -1,14 +1,7 @@
 package src.exceptions;
 
-/**
- * 
- */
-public class CreditLimitException {
-
-    /**
-     * Default constructor
-     */
-    public CreditLimitException() {
+public class CreditLimitException extends Exception {
+    public CreditLimitException(String message) {
+        super(message);
     }
-
 }

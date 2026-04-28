@@ -1,7 +1,7 @@
 package src.exceptions;
 
-public class InvalidGpaException extends Throwable {
-    public InvalidGpaException(String message){
-
+public class InvalidGpaException extends Exception {
+    public InvalidGpaException(String message) {
+        super(message);
     }
 }

@@ -1,14 +1,7 @@
 package src.exceptions;
 
-/**
- * 
- */
-public class MaxFailedReachedException {
-
-    /**
-     * Default constructor
-     */
-    public MaxFailedReachedException() {
+public class MaxFailedReachedException extends Exception {
+    public MaxFailedReachedException(String message) {
+        super(message);
     }
-
 }

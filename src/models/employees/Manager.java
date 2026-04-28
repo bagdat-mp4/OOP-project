@@ -1,91 +1,122 @@
 package src.models.employees;
 
-import src.enums.ManagerType;
+import src.DataStore;
 import src.GlobalMessage;
+import src.enums.ManagerType;
 import src.models.*;
 import src.models.students.Course;
 import src.models.students.Student;
 
-/**
- * 
- */
+import java.util.*;
+
 public class Manager extends Employee {
 
-    /**
-     * Default constructor
-     */
-    public Manager() {
-    }
-
-    /**
-     * 
-     */
     private ManagerType type;
 
+    public Manager() {
+        super();
+    }
+
+    // getters
+    public ManagerType getType() { return type; }
+
+    // setters
+    public void setType(ManagerType type) { this.type = type; }
 
 
-
-
-    /**
-     * @param course 
-     * @param teacher 
-     * @return
-     */
     public void assignCourse(Course course, Teacher teacher) {
-        // TODO implement here
-        return null;
+        teacher.addCourse(course);
+        course.addLectureInstructor(teacher);
+        System.out.println("Course assigned: " + teacher.getFirstName() +
+                " -> " + course.getName());
     }
 
-    /**
-     * @param student 
-     * @param course 
-     * @return
-     */
+
     public void approveRegistration(Student student, Course course) {
-        // TODO implement here
-        return null;
+        if (!course.getEnrolledStudents().contains(student)) {
+            course.enrollStudent(student);
+            System.out.println("Registration approved: " +
+                    student.getFirstName() + " -> " + course.getName());
+        } else {
+            System.out.println("Student already enrolled in this course.");
+        }
     }
 
-    /**
-     * @return
-     */
+
     public void createStatisticalRecord() {
-        // TODO implement here
-        return null;
+        List<User> users = DataStore.getInstance().getUsers();
+        System.out.println("===== Academic Performance Statistics =====");
+        for (User user : users) {
+            if (user instanceof Student student) {
+                System.out.printf("Student: %s %s | GPA: %.2f | Credits: %d%n",
+                        student.getFirstName(),
+                        student.getLastName(),
+                        student.getGpa(),
+                        student.getCurrentCredits());
+            }
+        }
     }
 
-    /**
-     * @return
-     */
+
     public void viewRequests() {
-        // TODO implement here
-        return null;
+        System.out.println("===== Tech Support Requests =====");
+        var requests = DataStore.getInstance().getTechSupportRequests();
+        if (requests.isEmpty()) {
+            System.out.println("No requests.");
+            return;
+        }
+        for (var request : requests) {
+            System.out.println(request);
+        }
     }
 
-    /**
-     * @return
-     */
+
     public void generateTopResearcherNews() {
-        // TODO implement here
-        return null;
+        List<ResearchProject> projects = DataStore.getInstance().getResearchProjects();
+        ResearcherDecorator topResearcher = null;
+        int maxHIndex = 0;
+
+        for (ResearchProject project : projects) {
+            for (src.interfaces.Researcher researcher : project.getParticipants()) {
+                if (researcher instanceof ResearcherDecorator rd) {
+                    if (rd.getHIndex() > maxHIndex) {
+                        maxHIndex = rd.getHIndex();
+                        topResearcher = rd;
+                    }
+                }
+            }
+        }
+
+        if (topResearcher != null) {
+            News news = new News(
+                    "Research",
+                    "Top researcher: " + topResearcher.getFirstName() +
+                            " " + topResearcher.getLastName() +
+                            " | H-index: " + topResearcher.getHIndex(),
+                    true
+            );
+            DataStore.getInstance().addNews(news);
+            System.out.println("News created: " + news);
+        } else {
+            System.out.println("No researchers found.");
+        }
     }
 
-    /**
-     * @param message 
-     * @return
-     */
+
     public void sendGlobalMessage(GlobalMessage message) {
-        // TODO implement here
-        return null;
+        System.out.println("Global message from manager: " + message);
     }
 
-    /**
-     * @param user 
-     * @return
-     */
+
     public ResearcherDecorator makeResearcher(User user) {
-        // TODO implement here
-        return null;
+        ResearcherDecorator researcher = new ResearcherDecorator(user);
+        System.out.println("User is now a researcher: " + user.getFirstName());
+        return researcher;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Manager[ %s %s | Type: %s ]",
+                getFirstName(), getLastName(), type);
+    }
 }

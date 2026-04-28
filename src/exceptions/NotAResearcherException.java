@@ -1,15 +1,7 @@
 package src.exceptions;
 
-/**
- * 
- */
-public class NotAResearcherException {
-
-    /**
-     * Default constructor
-     */
-    public NotAResearcherException() {
+public class NotAResearcherException extends Exception {
+    public NotAResearcherException(String message) {
+        super(message);
     }
-
-
 }

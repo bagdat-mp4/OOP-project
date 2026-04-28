@@ -2,74 +2,61 @@ package src.models;
 
 import src.interfaces.Subscriber;
 
+import java.io.Serializable;
 import java.util.*;
 
-/**
- * 
- */
-public class Journal {
+public class Journal implements Serializable {
 
-    /**
-     * Default constructor
-     */
-    public Journal() {
-    }
-
-    /**
-     * 
-     */
     private String name;
-
-    /**
-     * 
-     */
     private List<Subscriber> subscribers;
-
-    /**
-     * 
-     */
     private List<ResearchPaper> publishedPapers;
 
-    /**
-     * 
-     */
-    public ResearchPaper many;
+    public Journal() {
+        this.subscribers = new ArrayList<>();
+        this.publishedPapers = new ArrayList<>();
+    }
 
+    public Journal(String name) {
+        this.name = name;
+        this.subscribers = new ArrayList<>();
+        this.publishedPapers = new ArrayList<>();
+    }
 
-    /**
-     * @param user 
-     * @return
-     */
+    public String getName() { return name; }
+    public List<Subscriber> getSubscribers() { return subscribers; }
+    public List<ResearchPaper> getPublishedPapers() { return publishedPapers; }
+
+    public void setName(String name) { this.name = name; }
+
     public void subscribe(User user) {
-        // TODO implement here
-        return null;
+        if (!subscribers.contains(user)) {
+            subscribers.add(user);
+            System.out.println(user.getFirstName() + " subscribed to: " + name);
+        } else {
+            System.out.println("Already subscribed to this journal.");
+        }
     }
 
-    /**
-     * @param user 
-     * @return
-     */
     public void unsubscribe(User user) {
-        // TODO implement here
-        return null;
+        subscribers.remove(user);
+        System.out.println(user.getFirstName() + " unsubscribed from: " + name);
     }
 
-    /**
-     * @param paper 
-     * @return
-     */
     public void publishPaper(ResearchPaper paper) {
-        // TODO implement here
-        return null;
+        publishedPapers.add(paper);
+        System.out.println("New paper in \"" + name + "\": " + paper.getTitle());
+        notifySubscribers(paper);
     }
 
-    /**
-     * @param paper 
-     * @return
-     */
     private void notifySubscribers(ResearchPaper paper) {
-        // TODO implement here
-        return null;
+        for (Subscriber subscriber : subscribers) {
+            subscriber.update(name, paper);
+        }
     }
 
+    @Override
+    public String toString() {
+        return String.format("Journal[ %s | Papers: %d | Subscribers: %d ]",
+                name, publishedPapers.size(), subscribers.size());
+    }
 }
